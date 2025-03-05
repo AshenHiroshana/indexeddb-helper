@@ -3,4 +3,5 @@
  */
 
 export * from './lib/indexed-db.service';
-export * from './lib/indexed-db.component';
+export * from './lib/indexed-db.tokens'; // Export any tokens like dbName/storeName
+

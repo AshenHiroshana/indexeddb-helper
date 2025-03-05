@@ -7,27 +7,27 @@
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
-    "paths": {
-      "indexed-db": [
-        "./dist/indexed-db"
-      ]
-    },
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
     "isolatedModules": true,
     "esModuleInterop": true,
     "sourceMap": true,
-    "declaration": false,
+    "declaration": true,  // Ensure that declaration files are generated
     "experimentalDecorators": true,
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",  // Use "node" for proper resolution
     "importHelpers": true,
-    "target": "ES2022",
-    "module": "ES2022",
+    "target": "ES2015",  // Use ES2015 to support Angular 11 and later
+    "module": "ESNext",  // Use "ESNext" for better support in Angular
     "lib": [
-      "ES2022",
+      "ES2015",
       "dom"
-    ]
+    ],
+    "paths": {
+      "indexed-db": [
+        "./dist/indexed-db"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
