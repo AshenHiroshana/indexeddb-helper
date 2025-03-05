@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { IndexedDbHandler } from './indexed-db.service';
-import { DB_NAME, STORE_NAME } from './indexed-db.tokens';
-
+import { DB_NAME, STORE_NAME, CACHED_TIME } from './indexed-db.tokens';
 
 describe('IndexedDbHandler', () => {
   let service: IndexedDbHandler;
@@ -12,12 +11,10 @@ describe('IndexedDbHandler', () => {
         IndexedDbHandler,
         { provide: DB_NAME, useValue: 'TestDB' },
         { provide: STORE_NAME, useValue: 'TestStore' },
+        { provide: CACHED_TIME, useValue: 1 } // CACHED_TIME as 1 hour
       ],
     });
     service = TestBed.inject(IndexedDbHandler);
-
-    // Replace real IndexedDB with mock implementation during tests
-    // global.indexedDB = new MockIndexedDB() as any;
   });
 
   afterEach(async () => {
@@ -27,7 +24,6 @@ describe('IndexedDbHandler', () => {
     const store = transaction.objectStore('TestStore');
     store.clear(); // Clear all entries in the store
   });
-
 
   it('should be created', () => {
     expect(service).toBeTruthy();
@@ -90,5 +86,77 @@ describe('IndexedDbHandler', () => {
     expect(retrievedData).toBeNull(); // Should return null for non-existent data
   });
 
-  // Add more test cases for update, getAll, and error handling
+  // Test for clearing the store
+  it('should clear all data from the store', async () => {
+    const data = { id: 'user6', name: 'Bob' };
+
+    // Save data
+    await service.saveData(data.id, data);
+
+    // Verify data is saved
+    let retrievedData = await service.getData(data.id);
+    expect(retrievedData).toEqual(data);
+
+    // Clear the store
+    await service.clearStore();
+
+    // Verify store is cleared
+    retrievedData = await service.getData(data.id);
+    expect(retrievedData).toBeNull(); // Should be null since the store is cleared
+  });
+
+  // Test for setting and getting cachedTime
+  it('should get and set cachedTime correctly', () => {
+    // Set new cachedTime
+    service.setCachedTime(7200000);  // Set to 2 hours
+
+    // Get the current cachedTime
+    const currentCachedTime = service.getCachedTime();
+    expect(currentCachedTime).toBe(7200000); // Ensure the cachedTime was set correctly
+  });
+
+  /*it('should expire data correctly based on cachedTime', async () => {
+    const data = { id: 'user7', name: 'Test User' };
+    const cacheTime = 1;  // 1 hour expiration
+
+    // Save data with a "fresh" timestamp
+    await service.saveData(data.id, data, cacheTime);
+
+    // Retrieve the data right away to ensure it has not expired yet
+    const retrievedDataBeforeExpiration = await service.getData(data.id);
+    expect(retrievedDataBeforeExpiration).toEqual(data); // Data should still be valid
+
+    // Manually simulate expiration by setting the savedTime to be 2 hours ago
+    const expiredData = { ...data, savedTime: new Date(new Date().getTime() - (2 * 3600000)).toISOString() }; // 2 hours ago
+    await service.saveData(expiredData.id, expiredData, cacheTime);  // Save the "expired" data
+
+    // Retrieve data again to check if it has expired (should return null)
+    const retrievedDataAfterExpiration = await service.getData(expiredData.id);
+    expect(retrievedDataAfterExpiration).toBeNull(); // Data should be null after expiration
+  });*/
+
+
+  // Test for saveData with cacheTime set to 0 (no expiration)
+  it('should not expire data when cachedTime is 0', async () => {
+    const data = { name: 'John Doe' };
+    const cacheTime = 0; // This means the data should never expire
+
+    await service.saveData('user8', data, cacheTime);  // Save data with cacheTime as 0
+
+    const retrievedData = await service.getData('user8');
+    expect(retrievedData).toEqual(data); // The data should be returned without expiration check
+  });
+
+  // Test for data expiration based on cachedTime
+/*  it('should expire data correctly based on cachedTime', async () => {
+    const data = { id: 'user9', name: 'Test User' };
+    const cacheTime = 1;  // 1 hour expiration
+
+    await service.saveData(data.id, data, cacheTime);
+
+    // Simulate waiting for more than 1 hour (skipping the waiting time here for simplicity)
+    const retrievedData = await service.getData(data.id);
+    expect(retrievedData).toBeNull(); // Data should expire after 1 hour
+  });*/
+
 });
