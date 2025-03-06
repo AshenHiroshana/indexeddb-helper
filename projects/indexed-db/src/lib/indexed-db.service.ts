@@ -238,16 +238,13 @@ export class IndexedDbHandler {
     this.cachedTime = newCachedTime; // Update the cachedTime value
   }
 
-  private async checkIfExpired(savedTime: string, comparisonTime: number): Promise<boolean> {
-    if (comparisonTime === 0) {
-      return false;  // If cachedTime is 0, data never expires
+  private async checkIfExpired(savedTime: string, comparisonTimeInMs: number): Promise<boolean> {
+    if (comparisonTimeInMs === 0) {
+      return false;  // If comparisonTime is 0, data never expires
     }
 
     const currentTime = new Date().getTime();  // Get current time in milliseconds
     const savedTimeStamp = new Date(savedTime).getTime();  // Convert savedTime to milliseconds
-
-    // Convert comparisonTime from hours to milliseconds
-    const comparisonTimeInMs = comparisonTime * 60 * 60 * 1000;
 
     const difference = currentTime - savedTimeStamp;  // Calculate time difference
 
@@ -256,6 +253,5 @@ export class IndexedDbHandler {
     // Check if the time difference exceeds the comparisonTime (in milliseconds)
     return difference > comparisonTimeInMs;
   }
-
 
 }
