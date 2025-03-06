@@ -64,7 +64,6 @@ export class IndexedDbHandler {
     // Create a new instance of the DataToStore class
     const dataToStore = new DataToStore(key, value);
     dataToStore.cachedTime = cacheTime;  // Set the cacheTime (null if not provided)
-    console.log(key, cacheTime)
     return new Promise((resolve, reject) => {
       const request = store.put(dataToStore); // Save the object
 
@@ -247,8 +246,6 @@ export class IndexedDbHandler {
     const savedTimeStamp = new Date(savedTime).getTime();  // Convert savedTime to milliseconds
 
     const difference = currentTime - savedTimeStamp;  // Calculate time difference
-
-    console.log('Time difference:', difference, 'Comparison time (ms):', comparisonTimeInMs);
 
     // Check if the time difference exceeds the comparisonTime (in milliseconds)
     return difference > comparisonTimeInMs;
