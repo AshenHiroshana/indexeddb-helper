@@ -24,12 +24,18 @@ export class IndexedDbHandler {
     this.dbInitialized = this.initDB();
   }
 
-  // Method to block execution until DB is initialized
+  /**
+   * Ensures that the database is fully set up before performing any operations.
+   * @returns A promise that resolves when the IndexedDB is initialized.
+   */
   public async whenInitialized(): Promise<IDBDatabase> {
     return this.dbInitialized;
   }
 
-  // Initialize IndexedDB
+  /**
+   * Initializes the IndexedDB and creates the object store if it doesn't exist.
+   * @returns A promise that resolves to the IndexedDB instance.
+   */
   private initDB(): Promise<IDBDatabase> {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open(this.dbName);
@@ -54,7 +60,13 @@ export class IndexedDbHandler {
     });
   }
 
-
+  /**
+   * Saves data to the IndexedDB.
+   * @param key The key used to store the data.
+   * @param value The data to be saved.
+   * @param cacheTime Optional parameter to specify the cache time for the data.
+   * @returns A promise that resolves when the data is saved.
+   */
   public async saveData(key: string, value: any, cacheTime: number | null = null): Promise<void> {
     await this.whenInitialized(); // Ensure DB is initialized
     const db = await this.whenInitialized();
@@ -77,7 +89,11 @@ export class IndexedDbHandler {
     });
   }
 
-
+  /**
+   * Retrieves data from the IndexedDB by key.
+   * @param key The key of the data to retrieve.
+   * @returns A promise that resolves to the data or null if not found or expired.
+   */
   public async getData(key: string): Promise<any> {
     await this.whenInitialized(); // Ensure DB is initialized
     const db = await this.whenInitialized();
@@ -118,7 +134,11 @@ export class IndexedDbHandler {
   }
 
 
-  // CRUD operation - Remove data
+  /**
+   * Removes data from the IndexedDB by key.
+   * @param key The key of the data to remove.
+   * @returns A promise that resolves when the data is removed.
+   */
   public async removeData(key: string): Promise<void> {
     await this.whenInitialized(); // Ensure DB is initialized
     const db = await this.whenInitialized();
@@ -139,7 +159,12 @@ export class IndexedDbHandler {
   }
 
 
-  // CRUD operation - Update data
+  /**
+   * Updates data in the IndexedDB by key.
+   * @param key The key of the data to update.
+   * @param value The new data to update.
+   * @returns A promise that resolves when the data is updated.
+   */
   public async updateData(key: string, value: any): Promise<void> {
     await this.whenInitialized(); // Ensure DB is initialized
     const db = await this.whenInitialized();
@@ -162,7 +187,11 @@ export class IndexedDbHandler {
     });
   }
 
-// CRUD operation - Get all data in the store
+  /**
+   * Retrieves all data from the IndexedDB store.
+   * Filters out expired data based on the cache time or default expiration time.
+   * @returns A promise that resolves to an array of all valid data items.
+   */
   public async getAll(): Promise<any[]> {
     await this.whenInitialized(); // Ensure DB is initialized
 
@@ -207,6 +236,10 @@ export class IndexedDbHandler {
     });
   }
 
+  /**
+   * Clears all data in the IndexedDB store.
+   * @returns A promise that resolves when the store is cleared.
+   */
   public async clearStore(): Promise<void> {
     await this.whenInitialized(); // Ensure DB is initialized
     const db = await this.whenInitialized();
@@ -227,16 +260,28 @@ export class IndexedDbHandler {
   }
 
 
-// Getter for cachedTime
+  /**
+   * Getter for the cached time value.
+   * @returns The current cached time value.
+   */
   public getCachedTime(): number {
     return this.cachedTime;
   }
 
-  // Setter for cachedTime
+  /**
+   * Setter for the cached time value.
+   * @param newCachedTime The new cached time value to set.
+   */
   public setCachedTime(newCachedTime: number): void {
     this.cachedTime = newCachedTime; // Update the cachedTime value
   }
 
+  /**
+   * Checks if the data has expired based on the saved time and comparison time.
+   * @param savedTime The saved time of the data.
+   * @param comparisonTimeInMs The comparison time in milliseconds.
+   * @returns A promise that resolves to a boolean indicating if the data is expired.
+   */
   private async checkIfExpired(savedTime: string, comparisonTimeInMs: number): Promise<boolean> {
     if (comparisonTimeInMs === 0) {
       return false;  // If comparisonTime is 0, data never expires
