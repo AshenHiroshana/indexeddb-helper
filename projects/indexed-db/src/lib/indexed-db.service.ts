@@ -43,14 +43,33 @@ export class IndexedDbHandler {
       request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
         const db = (event.target as IDBOpenDBRequest).result;
         if (!db.objectStoreNames.contains(this.storeName)) {
-          db.createObjectStore(this.storeName, {keyPath: 'id'});
+          db.createObjectStore(this.storeName, { keyPath: 'id' });
           console.info(`Object store '${this.storeName}' created.`);
         }
       };
 
       request.onsuccess = (event: Event) => {
         const db = (event.target as IDBOpenDBRequest).result;
-        resolve(db);
+        if (!db.objectStoreNames.contains(this.storeName)) {
+          db.close();
+          const versionRequest = indexedDB.open(this.dbName, db.version + 1);
+          versionRequest.onupgradeneeded = (event: IDBVersionChangeEvent) => {
+            const upgradedDb = (event.target as IDBOpenDBRequest).result;
+            upgradedDb.createObjectStore(this.storeName, { keyPath: 'id' });
+            console.info(`Object store '${this.storeName}' created.`);
+          };
+          versionRequest.onsuccess = (event: Event) => {
+            console.info('IndexedDB initialized successfully with upgraded version.');
+            resolve((event.target as IDBOpenDBRequest).result);
+          };
+          versionRequest.onerror = (event: Event) => {
+            console.error('Error reopening IndexedDB with incremented version:', event);
+            reject((event.target as IDBOpenDBRequest).error);
+          };
+        } else {
+          resolve(db);
+          console.info(`Object store '${this.storeName}' is ready.`);
+        }
       };
 
       request.onerror = (event: Event) => {
