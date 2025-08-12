@@ -1,17 +1,10 @@
-/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
-/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
 {
   "extends": "../../tsconfig.json",
-  "angularCompilerOptions": {
-    "enableIvy": true
-  },
   "compilerOptions": {
     "outDir": "../../out-tsc/lib",
     "declaration": true,
     "declarationMap": true,
-    "inlineSources": true,
-    "allowJs": true,
-    "types": ["jest"],
+    "inlineSources": true
   },
   "exclude": [
     "**/*.spec.ts"

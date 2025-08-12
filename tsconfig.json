@@ -1,38 +1,32 @@
-/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
-/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
 {
   "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./dist/out-tsc",
     "strict": true,
-    "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
     "isolatedModules": true,
     "esModuleInterop": true,
     "sourceMap": true,
-    "declaration": true,  // Ensure that declaration files are generated
+    "declaration": true,
     "experimentalDecorators": true,
-    "moduleResolution": "node",  // Use "node" for proper resolution
+    "moduleResolution": "node",
     "importHelpers": true,
-    "target": "ES2015",  // Use ES2015 to support Angular 11 and later
-    "module": "ESNext",  // Use "ESNext" for better support in Angular
+    "target": "ES5",
+    "module": "ES2015",
     "lib": [
       "ES2015",
       "dom"
     ],
-    "paths": {
-      "indexed-db": [
-        "./dist/indexed-db"
-      ]
-    }
+    "downlevelIteration": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true
   },
   "angularCompilerOptions": {
-    "enableI18nLegacyMessageIdFormat": false,
-    "strictInjectionParameters": true,
-    "strictInputAccessModifiers": true,
-    "strictTemplates": true
+    "enableI18nLegacyMessageIdFormat": true,
+    "strictInjectionParameters": false,
+    "strictInputAccessModifiers": false,
+    "strictTemplates": false
   }
 }
