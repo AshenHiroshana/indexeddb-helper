@@ -1,7 +1,7 @@
 import {Injectable, Inject} from '@angular/core';
 
 // Injection tokens for dbName and storeName (these will be injected dynamically)
-import {DB_NAME, STORE_NAME, CACHED_TIME} from './indexed-db.tokens';
+import {DB_NAME, STORE_NAME, CACHED_TIME, STORE_NAME_LIST} from './indexed-db.tokens';
 import {DataToStore} from './indexed-db.model'; // Import the tokens
 
 @Injectable({
@@ -10,16 +10,19 @@ import {DataToStore} from './indexed-db.model'; // Import the tokens
 export class IndexedDbHandler {
   private dbName: string;
   private storeName: string;
+  private storeNameList: string[];
   private cachedTime: number;
   private dbInitialized: Promise<IDBDatabase>;
 
   constructor(
     @Inject(DB_NAME) dbName: string,
     @Inject(STORE_NAME) storeName: string,
+    @Inject(STORE_NAME_LIST) storeNameList: string[],
     @Inject(CACHED_TIME) cachedTime: number
   ) {
     this.dbName = dbName;
     this.storeName = storeName;
+    this.storeNameList = storeNameList;
     this.cachedTime = cachedTime;
     this.dbInitialized = this.initDB();
   }
@@ -38,43 +41,35 @@ export class IndexedDbHandler {
    */
   private initDB(): Promise<IDBDatabase> {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.dbName);
+      // Always open DB with version (so that upgrades can be managed consistently)
+      const request = indexedDB.open(this.dbName, 1);
 
       request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
         const db = (event.target as IDBOpenDBRequest).result;
-        if (!db.objectStoreNames.contains(this.storeName)) {
-          db.createObjectStore(this.storeName, { keyPath: 'id' });
-          console.info(`Object store '${this.storeName}' created.`);
-        }
+
+        this.storeNameList.forEach((storeName) => {
+          if (!db.objectStoreNames.contains(storeName)) {
+            db.createObjectStore(storeName, { keyPath: 'id' });
+            console.info(`Object store '${storeName}' created.`);
+          }
+        });
       };
 
       request.onsuccess = (event: Event) => {
         const db = (event.target as IDBOpenDBRequest).result;
-        if (!db.objectStoreNames.contains(this.storeName)) {
-          db.close();
-          const versionRequest = indexedDB.open(this.dbName, db.version + 1);
-          versionRequest.onupgradeneeded = (event: IDBVersionChangeEvent) => {
-            const upgradedDb = (event.target as IDBOpenDBRequest).result;
-            upgradedDb.createObjectStore(this.storeName, { keyPath: 'id' });
-            console.info(`Object store '${this.storeName}' created.`);
-          };
-          versionRequest.onsuccess = (event: Event) => {
-            console.info('IndexedDB initialized successfully with upgraded version.');
-            resolve((event.target as IDBOpenDBRequest).result);
-          };
-          versionRequest.onerror = (event: Event) => {
-            console.error('Error reopening IndexedDB with incremented version:', event);
-            reject((event.target as IDBOpenDBRequest).error);
-          };
-        } else {
-          resolve(db);
-          console.info(`Object store '${this.storeName}' is ready.`);
-        }
+        console.info(`IndexedDB '${this.dbName}' initialized successfully.`);
+        resolve(db);
       };
 
       request.onerror = (event: Event) => {
         console.error('Error opening IndexedDB:', event);
         reject((event.target as IDBOpenDBRequest).error);
+      };
+
+      request.onblocked = () => {
+        console.warn(
+            `IndexedDB upgrade blocked. Close other connections to '${this.dbName}' before retrying.`
+        );
       };
     });
   }

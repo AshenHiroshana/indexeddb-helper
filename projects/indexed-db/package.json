@@ -1,6 +1,6 @@
 {
   "name": "angular-indexed-db-helper",
-  "version": "11.0.1",
+  "version": "11.0.3",
   "description": "A powerful and flexible Angular 11 library for managing client-side storage using IndexedDB with support for cache expiration and CRUD operations.",
   "author": "Ashen Hiroshana",
   "license": "MIT",
