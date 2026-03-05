@@ -1,7 +1,7 @@
 {
   "name": "angular-indexeddb-library",
-  "version": "14.0.0",
-  "description": "A powerful and flexible Angular 14 library for managing client-side storage using IndexedDB with support for cache expiration and CRUD operations.",
+  "version": "15.0.0",
+  "description": "A powerful and flexible Angular 15 library for managing client-side storage using IndexedDB with support for cache expiration and CRUD operations.",
   "author": "Ashen Hiroshana",
   "license": "MIT",
   "repository": {
@@ -10,7 +10,7 @@
   },
   "keywords": [
     "angular",
-    "angular14",
+    "angular15",
     "indexeddb",
     "storage",
     "client-side",
@@ -25,17 +25,17 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/common": "^14.3.0",
-    "@angular/core": "^14.3.0",
+    "@angular/common": "^15.2.10",
+    "@angular/core": "^15.2.10",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.8"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^14.2.13",
-    "@angular/cli": "^14.2.13",
-    "@angular/compiler": "^14.3.0",
-    "@angular/compiler-cli": "^14.3.0",
+    "@angular-devkit/build-angular": "^15.2.11",
+    "@angular/cli": "^15.2.11",
+    "@angular/compiler": "^15.2.10",
+    "@angular/compiler-cli": "^15.2.10",
     "@types/jasmine": "~3.6.0",
     "@types/node": "^14.18.0",
     "jasmine-core": "~3.6.0",
@@ -44,11 +44,11 @@
     "karma-coverage": "~2.0.0",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.5.0",
-    "ng-packagr": "^14.2.2",
-    "typescript": "~4.6.4"
+    "ng-packagr": "^15.2.2",
+    "typescript": "~4.9.5"
   },
   "peerDependencies": {
-    "@angular/common": "^14.0.0",
-    "@angular/core": "^14.0.0"
+    "@angular/common": "^15.0.0",
+    "@angular/core": "^15.0.0"
   }
 }
