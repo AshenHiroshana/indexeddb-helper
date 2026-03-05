@@ -16,10 +16,6 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2015",
-    "lib": [
-      "ES2015",
-      "dom"
-    ],
     "downlevelIteration": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
