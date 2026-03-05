@@ -12,6 +12,7 @@
     "declaration": true,
     "experimentalDecorators": true,
     "moduleResolution": "node",
+    "baseUrl": "./",
     "importHelpers": true,
     "target": "ES5",
     "module": "ES2015",
