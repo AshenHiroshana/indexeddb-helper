@@ -1,7 +1,7 @@
 {
   "name": "angular-indexed-db-helper",
-  "version": "15.0.0",
-  "description": "A powerful and flexible Angular 15 library for managing client-side storage using IndexedDB with support for cache expiration and CRUD operations.",
+  "version": "16.0.0",
+  "description": "A powerful and flexible Angular 16 library for managing client-side storage using IndexedDB with support for cache expiration and CRUD operations.",
   "author": "Ashen Hiroshana",
   "license": "MIT",
   "repository": {
@@ -10,7 +10,7 @@
   },
   "keywords": [
     "angular",
-    "angular15",
+    "angular16",
     "indexeddb",
     "storage",
     "client-side",
@@ -19,8 +19,8 @@
     "crud-operations"
   ],
   "peerDependencies": {
-    "@angular/common": "^15.0.0",
-    "@angular/core": "^15.0.0",
+    "@angular/common": "^16.0.0",
+    "@angular/core": "^16.0.0",
     "rxjs": "~6.6.0"
   },
   "dependencies": {
